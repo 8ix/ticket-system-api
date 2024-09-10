@@ -29,6 +29,34 @@ class TicketFactory extends Factory
     }
 
     /**
+     * Indicate that the ticket is open.
+     *
+     * @return \Database\Factories\TicketFactory
+     */
+    public function open()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => false,
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the ticket is closed.
+     *
+     * @return \Database\Factories\TicketFactory
+     */
+    public function closed()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => true,
+            ];
+        });
+    }
+
+    /**
      * Indicate that the ticket is processed.
      *
      * @return \Database\Factories\TicketFactory

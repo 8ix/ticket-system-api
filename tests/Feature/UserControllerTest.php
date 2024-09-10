@@ -7,6 +7,24 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->user = User::factory()->create();
+
+    $this->jsonStructure = [
+        'current_page',
+        'data' => [
+            '*' => ['id', 'subject', 'content', 'status', 'created_at', 'updated_at']
+        ],
+        'first_page_url',
+        'from',
+        'last_page',
+        'last_page_url',
+        'links',
+        'next_page_url',
+        'path',
+        'per_page',
+        'prev_page_url',
+        'to',
+        'total',
+    ];
 });
 
 test('user tickets endpoint returns paginated tickets', function () {
@@ -19,23 +37,7 @@ test('user tickets endpoint returns paginated tickets', function () {
     // Assert
     $response->assertStatus(200)
         ->assertJsonCount(10, 'data')
-        ->assertJsonStructure([
-            'current_page',
-            'data' => [
-                '*' => ['id', 'subject', 'content', 'status', 'created_at', 'updated_at']
-            ],
-            'first_page_url',
-            'from',
-            'last_page',
-            'last_page_url',
-            'links',
-            'next_page_url',
-            'path',
-            'per_page',
-            'prev_page_url',
-            'to',
-            'total',
-        ]);
+        ->assertJsonStructure($this->jsonStructure);
 });
 
 test('user endpoint returns empty when there are no tickets', function () {
