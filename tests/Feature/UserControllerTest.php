@@ -9,43 +9,71 @@ beforeEach(function () {
     $this->user = User::factory()->create();
 
     $this->jsonStructure = [
-        'current_page',
         'data' => [
-            '*' => ['id', 'subject', 'content', 'status', 'created_at', 'updated_at']
+            'user' => [
+                'name',
+                'email',
+            ],
+            'tickets' => [
+                '*' => [
+                    'id', 
+                    'subject', 
+                    'content', 
+                    'status', 
+                    'created_at', 
+                    'updated_at'
+                ]
+            ]
         ],
-        'first_page_url',
-        'from',
-        'last_page',
-        'last_page_url',
-        'links',
-        'next_page_url',
-        'path',
-        'per_page',
-        'prev_page_url',
-        'to',
-        'total',
+        'meta' => [
+            'current_page',
+            'first_page_url',
+            'from',
+            'last_page',
+            'last_page_url',
+            'links',
+            'next_page_url',
+            'path',
+            'per_page',
+            'prev_page_url',
+            'to',
+            'total',
+        ],
+    ];
+
+    $this->jsonStructure404 = [
+        'data' => [
+            'message',
+            'errors',
+            'code'
+        ]
     ];
 });
 
 test('user tickets endpoint returns paginated tickets', function () {
-    // Arrange
     Ticket::factory()->count(20)->create(['user_id' => $this->user->id]);
 
-    // Act
     $response = $this->getJson("/api/users/{$this->user->id}/tickets?per_page=10");
 
-    // Assert
     $response->assertStatus(200)
-        ->assertJsonCount(10, 'data')
-        ->assertJsonStructure($this->jsonStructure);
+    ->assertJsonCount(10, 'data.tickets')
+    ->assertJsonStructure($this->jsonStructure)
+    ->assertJson([
+        'meta' => ['total' => 20]
+    ]);
+
+    $response->assertJson(['meta' => ['per_page' => 10]]);
 });
 
 test('user endpoint returns empty when there are no tickets', function () {
     $response = $this->getJson("/api/users/{$this->user->id}/tickets");
 
     $response->assertStatus(200)
-        ->assertJsonCount(0, 'data')
-        ->assertJson(['total' => 0]);
+        ->assertJsonCount(0, 'data.tickets')
+        ->assertJsonStructure($this->jsonStructure)
+        ->assertJson([
+            'meta' => ['total' => 0]
+    ]);
 });
 
 test('user endpoint returns tickets when they exist', function () {
@@ -54,21 +82,19 @@ test('user endpoint returns tickets when they exist', function () {
     $response = $this->getJson("/api/users/{$this->user->id}/tickets");
 
     $response->assertStatus(200)
-        ->assertJsonCount(3, 'data')
-        ->assertJson(['total' => 3]);
-});
-
-test('user tickets endpoint returns empty when no tickets', function () {
-    $response = $this->getJson("/api/users/{$this->user->id}/tickets");
-
-    $response->assertStatus(200)
-        ->assertJsonCount(0, 'data')
-        ->assertJson(['total' => 0]);
+        ->assertJsonCount(3, 'data.tickets')
+        ->assertJsonStructure($this->jsonStructure)
+        ->assertJson([
+            'meta' => ['total' => 3]
+    ]);
 });
 
 test('user tickets endpoint returns 404 for non existent user', function () {
     $response = $this->getJson("/api/users/9999/tickets");
-    $response->assertStatus(404);
+
+    $response->assertStatus(404)
+        ->assertJsonStructure($this->jsonStructure404);
+        
 });
 
 
