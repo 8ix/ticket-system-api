@@ -60,9 +60,7 @@ test('user tickets endpoint returns paginated tickets', function () {
     ->assertJsonStructure($this->jsonStructure)
     ->assertJson([
         'meta' => ['total' => 20]
-    ]);
-
-    $response->assertJson(['meta' => ['per_page' => 10]]);
+    ])->assertJson(['meta' => ['per_page' => 10]]);
 });
 
 test('user endpoint returns empty when there are no tickets', function () {
