@@ -11,7 +11,7 @@ class TicketController extends Controller
 {
     public function openTickets(Request $request): TicketCollection
     {
-        $tickets = Ticket::where('status', false)->paginate(
+        $tickets = Ticket::where('status', false)->orderBy('id', 'desc')->paginate(
             $request->input('per_page', 15)
         );
 
@@ -20,7 +20,7 @@ class TicketController extends Controller
     
     public function closedTickets(Request $request): TicketCollection
     {
-        $tickets = Ticket::where('status', true)->paginate(
+        $tickets = Ticket::where('status', true)->orderBy('id', 'desc')->paginate(
             $request->input('per_page', 15)
         );
 

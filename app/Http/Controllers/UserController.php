@@ -21,7 +21,7 @@ class UserController extends Controller
             ]);
         }
 
-        $tickets = $user->tickets()->paginate(
+        $tickets = $user->tickets()->orderBy('id', 'desc')->paginate(
             $request->input('per_page', 15)
         );
 
