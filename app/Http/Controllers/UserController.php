@@ -9,9 +9,9 @@ use App\Http\Resources\UserTicketsResource;
 
 class UserController extends Controller
 {
-    public function userTickets(Request $request, mixed $userId): UserTicketsResource | ErrorResource
+    public function userTickets(Request $request, mixed $email): UserTicketsResource | ErrorResource
     {
-        $user = User::find($userId);
+        $user = User::where('email', $email)->first();
 
         if (!$user) {
             return new ErrorResource([
