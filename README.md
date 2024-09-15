@@ -25,12 +25,17 @@ This project uses Laravel Sail for easy setup and consistent development environ
    ticket-system-api
    ```
 
-2. Start the Laravel Sail environment:
+2. Create a project .env file from the .env.example using the following command.
+   ```
+   cp .env.example .env
+   ```
+
+3. Start the Laravel Sail environment:
    ```
    ./vendor/bin/sail up -d
    ```
 
-3. Generate application key:
+4. Generate application key:
    ```
    ./vendor/bin/sail artisan key:generate
    ```
