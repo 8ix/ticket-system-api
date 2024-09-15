@@ -53,7 +53,7 @@ beforeEach(function () {
 test('user tickets endpoint returns paginated tickets', function () {
     Ticket::factory()->count(20)->create(['user_id' => $this->user->id]);
 
-    $response = $this->getJson("/api/users/{$this->user->id}/tickets?per_page=10");
+    $response = $this->getJson("/api/users/{$this->user->email}/tickets?per_page=10");
 
     $response->assertStatus(200)
     ->assertJsonCount(10, 'data.tickets')
@@ -64,7 +64,7 @@ test('user tickets endpoint returns paginated tickets', function () {
 });
 
 test('user endpoint returns empty when there are no tickets', function () {
-    $response = $this->getJson("/api/users/{$this->user->id}/tickets");
+    $response = $this->getJson("/api/users/{$this->user->email}/tickets");
 
     $response->assertStatus(200)
         ->assertJsonCount(0, 'data.tickets')
@@ -77,7 +77,7 @@ test('user endpoint returns empty when there are no tickets', function () {
 test('user endpoint returns tickets when they exist', function () {
     Ticket::factory()->count(3)->create(['user_id' => $this->user->id]);
 
-    $response = $this->getJson("/api/users/{$this->user->id}/tickets");
+    $response = $this->getJson("/api/users/{$this->user->email}/tickets");
 
     $response->assertStatus(200)
         ->assertJsonCount(3, 'data.tickets')
