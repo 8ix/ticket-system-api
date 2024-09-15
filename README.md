@@ -20,37 +20,49 @@ This project uses Laravel Sail for easy setup and consistent development environ
 
 ### Installation
 
-1. Download the repository and setup in a directory the original project directory was called
+1. Download the repository and set it up in a directory. The original project directory was called:
    ```
    ticket-system-api
    ```
 
-2. Create a project .env file from the .env.example using the following command.
+2. Ensure you have Docker installed on your system. If not, download and install it from [docker.com](https://www.docker.com/products/docker-desktop).
+
+3. Create a project .env file from the .env.example using the following command:
    ```
    cp .env.example .env
    ```
 
-3. Start the Laravel Sail environment:
+4. Build and start the Docker containers:
+   ```
+   docker run --rm \
+       -u "$(id -u):$(id -g)" \
+       -v "$(pwd):/var/www/html" \
+       -w /var/www/html \
+       laravelsail/php82-composer:latest \
+       composer install --ignore-platform-reqs
+   ```
+
+5. Start the Laravel Sail environment:
    ```
    ./vendor/bin/sail up -d
    ```
 
-4. Generate application key:
+6. Generate application key:
    ```
    ./vendor/bin/sail artisan key:generate
    ```
 
-## Database Setup
-
-1. Run migrations:
+7. Run database migrations:
    ```
    ./vendor/bin/sail artisan migrate
    ```
 
-2. Seed the database:
+8. (Optional) If you have sample data or seeders, run:
    ```
    ./vendor/bin/sail artisan db:seed
    ```
+
+Note: These instructions assume you're using a Unix-like operating system (Linux or macOS). If you're on Windows, you may need to adjust some commands or use Windows Subsystem for Linux (WSL).
 
 ## Commands
 
