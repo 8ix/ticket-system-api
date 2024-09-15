@@ -34,7 +34,7 @@ class GenerateTicketCommand extends Command
             $this->info('Created a new user as no users existed.');
         }
 
-        $ticket = Ticket::factory()->create([
+        $ticket = Ticket::factory()->open()->create([
             'user_id' => $user->id,
         ]);
 
